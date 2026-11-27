@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>Today List - 프로필</title>
+<style>
+	/*다크모드 스타일*/
+		body.dark-mode {
+			background-color: #121212;
+			color: #f1f1f1;
+		}
+
+		body.dark-mode .clock-container,
+		body.dark-mode aside,
+		body.dark-mode aside h3,
+		body.dark-mode .progress-text {
+			color: #f1f1f1 !important;
+		}
+
+		body.dark-mode #date-text { color: #aaa; }
+		body.dark-mode #clock-text { color: #fff; }
+		body.dark-mode .dday-text { color: #ccc; }
+	
+		body.dark-mode input[type="text"] {
+			background-color: #2a2a2a;
+			color: #fff;
+			border: 1px solid #444;
+		}
+</style>
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="index.html">메인</a></li>
+				<li><a href="cal.html">캘린더</a></li>
+				<li><a href="timer.html">타이머</a></li>
+				<li><a href="stats.html">통계</a></li>
+				<li><a href="theme.html">테마</a></li>
+				<li><a href="profile.html">프로필</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<!-- 프로필 사진 및 기본 정보 -->
+		<section class="profile-info">
+			<div class="profile-image">
+				<img src="photo.jpg" alt="최규림 프로필 사진">
+			</div>
+			
+			<div class="profile-details">
+				<h2>기본 정보</h2>
+				<p><strong>이름 :</strong> 최규림</p>
+				<p><strong>나이 :</strong> 24세 (03년생)</p>
+				<p><strong>학과 :</strong> 디지털콘텐츠학과</p>
+			</div>
+		</section>
+
+		<!-- 제작 동기 -->
+		<section class="profile-motivation">
+			<h3>- 제작 동기</h3>
+			<p>
+				바쁜 일상과 과제 일정 속에서 할 일을 관리할 때, 기존의 메모장이나 캘린더 앱은 시각적인 지루함을 주곤 했습니다. 
+				작업에 집중할 수 있는 편안한 분위기와 함께, 직관적으로 오늘의 할 일을 관리할 수 있는 웹 공간의 필요성을 느꼈고 
+				이왕 만드는 거 실용성 있는 홈페이지를 바라기 때문입니다.
+			</p>
+		</section>
+	</main>
+<script>
+	if (localStorage.getItem('theme') === 'dark') {
+		document.body.classList.add('dark-mode');
+	}
+</script>
+</body>
+</html>
