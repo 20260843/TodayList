@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Today List - 캘린더</title>
+<style>
+    /* 다크모드 스타일 */
+    body.dark-mode {
+        background-color: #121212;
+        color: #f1f1f1;
+    }
+
+    body.dark-mode main {
+        background-color: #1e1e1e;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-mode .cal-nav-btn {
+        border-color: #444;
+    }
+
+    body.dark-mode .cal-nav-btn:hover {
+        background-color: #2a2a2a;
+    }
+
+    body.dark-mode th {
+        background-color: #252525;
+        border-color: #333;
+    }
+
+    body.dark-mode td {
+        border-color: #333;
+    }
+
+    body.dark-mode td.empty {
+        background-color: #181818;
+    }
+
+    body.dark-mode td:hover:not(.empty) {
+        background-color: #2a2a2a;
+    }
+
+    body.dark-mode td.selected {
+        background-color: #1e3a5f !important;
+        outline-color: #64b5f6;
+    }
+
+    body.dark-mode .schedule-panel {
+        border-top-color: #333;
+    }
+
+    body.dark-mode .schedule-form input[type="text"],
+    body.dark-mode .schedule-form input[type="date"] {
+        background-color: #2a2a2a;
+        color: #fff;
+        border-color: #444;
+    }
+
+    body.dark-mode .date-range-box {
+        color: #aaa;
+    }
+
+    body.dark-mode .schedule-list li {
+        background-color: #2a2a2a;
+    }
+</style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">메인</a></li>
+                <li><a href="cal.html">캘린더</a></li>
+                <li><a href="timer.html">타이머</a></li>
+                <li><a href="stats.html">통계</a></li>
+                <li><a href="theme.html">테마</a></li>
+                <li><a href="profile.html">프로필</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="cal-header">
+            <button type="button" class="cal-nav-btn" id="prev-month">&lt; 이전</button>
+            <h2 id="cal-title">2026. 11</h2>
+            <button type="button" class="cal-nav-btn" id="next-month">다음 &gt;</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>일</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                </tr>
+            </thead>
+            <tbody id="cal-body"></tbody>
+        </table>
+
+        <section class="schedule-panel">
+            <h3 id="selected-date-title">날짜를 선택해주세요</h3>
+            <form class="schedule-form" id="schedule-form">
+                <div class="form-row">
+                    <input type="text" id="schedule-input" placeholder="일정 내용을 입력하세요." required>
+                    <button type="submit">추가</button>
+                </div>
+                <div class="date-range-box">
+                    <span>기간:</span>
+                    <input type="date" id="start-date" required>
+                    <span>~</span>
+                    <input type="date" id="end-date" required>
+                </div>
+            </form>
+            <ul class="schedule-list" id="schedule-list"></ul>
+        </section>
+    </main>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    const calTitle = document.getElementById('cal-title');
+    const calBody = document.getElementById('cal-body');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    const selectedDateTitle = document.getElementById('selected-date-title');
+    const scheduleForm = document.getElementById('schedule-form');
+    const scheduleInput = document.getElementById('schedule-input');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const scheduleList = document.getElementById('schedule-list');
+
+    const today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth(); 
+    let selectedDateStr = formatDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+    let schedules = JSON.parse(localStorage.getItem('calendarSchedulesV2')) || [];
+    let mainDdays = JSON.parse(localStorage.getItem('customMainDdaysV2')) || [];
+
+    function formatDateKey(year, month, day) {
+        const m = String(month + 1).padStart(2, '0');
+        const d = String(day).padStart(2, '0');
+        return `${year}-${m}-${d}`;
+    }
+
+    function saveSchedules() {
+        localStorage.setItem('calendarSchedulesV2', JSON.stringify(schedules));
+        localStorage.setItem('customMainDdaysV2', JSON.stringify(mainDdays));
+    }
+
+    function renderCalendar() {
+        calTitle.textContent = `${currentYear}. ${String(currentMonth + 1).padStart(2, '0')}`;
+        calBody.innerHTML = '';
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        let dateNum = 1;
+        for (let row = 0; row < 6; row++) {
+            const tr = document.createElement('tr');
+
+            for (let col = 0; col < 7; col++) {
+                const td = document.createElement('td');
+
+                if ((row === 0 && col < firstDay) || dateNum > lastDate) {
+                    td.classList.add('empty');
+                } else {
+                    const thisDateStr = formatDateKey(currentYear, currentMonth, dateNum);
+
+                    if (currentYear === today.getFullYear() && currentMonth === today.getMonth() && dateNum === today.getDate()) {
+                        td.classList.add('today');
+                    }
+                    if (thisDateStr === selectedDateStr) {
+                        td.classList.add('selected');
+                    }
+
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'day-num';
+                    dayDiv.textContent = dateNum;
+                    td.appendChild(dayDiv);
+
+                    schedules.forEach(sch => {
+                        if (thisDateStr >= sch.startDate && thisDateStr <= sch.endDate) {
+                            const badge = document.createElement('div');
+                            badge.className = 'event-bar';
+                            
+                            const isDday = mainDdays.some(d => d.id === sch.id);
+                            if (isDday) {
+                                badge.classList.add('dday-active');
+                                badge.textContent = `★ ${sch.title}`;
+                            } else {
+                                badge.textContent = sch.title;
+                            }
+                            td.appendChild(badge);
+                        }
+                    });
+
+                    td.addEventListener('click', () => {
+                        selectedDateStr = thisDateStr;
+                        startDateInput.value = selectedDateStr;
+                        endDateInput.value = selectedDateStr;
+                        renderCalendar();
+                        renderSchedulePanel();
+                    });
+
+                    dateNum++;
+                }
+                tr.appendChild(td);
+            }
+            calBody.appendChild(tr);
+        }
+    }
+
+    function renderSchedulePanel() {
+        selectedDateTitle.textContent = `📅 ${selectedDateStr} 일정 관리`;
+        
+        if (!startDateInput.value) {
+            startDateInput.value = selectedDateStr;
+            endDateInput.value = selectedDateStr;
+        }
+
+        scheduleList.innerHTML = '';
+
+        const matchedSchedules = schedules.filter(sch => selectedDateStr >= sch.startDate && selectedDateStr <= sch.endDate);
+
+        if (matchedSchedules.length === 0) {
+            scheduleList.innerHTML = '<li style="color: #888; justify-content: center;">등록된 일정이 없습니다.</li>';
+            return;
+        }
+
+        matchedSchedules.forEach(sch => {
+            const li = document.createElement('li');
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = `${sch.title} (${sch.startDate} ~ ${sch.endDate})`;
+
+            const btnGroup = document.createElement('div');
+
+            const ddayBtn = document.createElement('button');
+            ddayBtn.type = 'button';
+            ddayBtn.className = 'btn-dday';
+            const isCurrentDday = mainDdays.some(d => d.id === sch.id);
+
+            if (isCurrentDday) {
+                ddayBtn.classList.add('active');
+                ddayBtn.textContent = '★ 디데이 해제';
+            } else {
+                ddayBtn.textContent = '디데이 설정';
+            }
+
+            ddayBtn.addEventListener('click', () => {
+                if (isCurrentDday) {
+                    mainDdays = mainDdays.filter(d => d.id !== sch.id);
+                } else {
+                    mainDdays.push({ id: sch.id, title: sch.title, date: sch.startDate });
+                }
+                saveSchedules();
+                renderCalendar();
+                renderSchedulePanel();
+            });
+
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn-del';
+            delBtn.textContent = '[삭제]';
+            delBtn.addEventListener('click', () => {
+                schedules = schedules.filter(s => s.id !== sch.id);
+                mainDdays = mainDdays.filter(d => d.id !== sch.id);
+                saveSchedules();
+                renderCalendar();
+                renderSchedulePanel();
+            });
+
+            btnGroup.appendChild(ddayBtn);
+            btnGroup.appendChild(delBtn);
+
+            li.appendChild(textSpan);
+            li.appendChild(btnGroup);
+            scheduleList.appendChild(li);
+        });
+    }
+
+    scheduleForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = scheduleInput.value.trim();
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+
+        if (!title || !startDate || !endDate) return;
+        if (startDate > endDate) {
+            alert('시작일이 종료일보다 늦을 수 없습니다!');
+            return;
+        }
+
+        const newSchedule = {
+            id: Date.now().toString(),
+            title: title,
+            startDate: startDate,
+            endDate: endDate
+        };
+
+        schedules.push(newSchedule);
+        saveSchedules();
+
+        scheduleInput.value = '';
+        renderCalendar();
+        renderSchedulePanel();
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+    });
+
+    startDateInput.value = selectedDateStr;
+    endDateInput.value = selectedDateStr;
+    renderCalendar();
+    renderSchedulePanel();
+</script>
+</body>
+</html>
