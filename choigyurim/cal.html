@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Today List - 캘린더</title>
+<style>
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+    		font-weight: 100;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+    		font-weight: 200;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+    		font-weight: 300;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    		font-weight: 400;
+    		font-display: swap;
+	}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+    		font-weight: 500;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+    		font-weight: 600;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    		font-weight: 700;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    		font-weight: 800;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+    		font-weight: 900;
+    		font-display: swap;
+		}
+    	* {
+        		box-sizing: border-box;
+    	}
+
+	body {
+		margin: 0;
+        		height: 100vh;
+        		overflow: hidden;
+        		background-color: #ffffff;
+        		color: #1a1a1a;
+        		font-family: 'Paperozi', sans-serif;
+        		display: flex;
+        		flex-direction: column;
+        		transition: background-color 0.25s ease, color 0.25s ease;
+    	}
+
+    	header {
+        		width: 100%;
+        		padding: 12px 48px 0;
+        		flex-shrink: 0;
+    	}
+
+    	header nav ul {
+        		list-style: none;
+        		margin: 0;
+        		padding: 0;
+        		display: flex;
+        		justify-content: flex-end;
+        		gap: 20px;
+    	}
+
+    	header nav a {
+        		color: #1a1a1a;
+        		text-decoration: none;
+		font-size: 1.05rem;
+        		font-weight: 500;
+    	}
+
+    	header nav a:hover {
+        		opacity: 0.7;
+    	}
+
+    	main {
+        		width: 100%;
+        		max-width: 1240px;
+        		margin: 0 auto;
+        		padding: 14px 36px 24px;
+        		flex: 1;
+        		min-height: 0;
+        		display: flex;
+        		gap: 28px;
+        		align-items: stretch;
+    	}
+
+    	.calendar-area {
+        		flex: 1.55;
+        		min-width: 0;
+        		min-height: 0;
+        		display: flex;
+        		flex-direction: column;
+        		gap: 12px;
+    	}
+
+    	.cal-header {
+        		display: flex;
+        		justify-content: space-between;
+        		align-items: center;
+        		flex-shrink: 0;
+    	}
+
+    	.cal-header h2 {
+		margin: 0;
+		font-size: 1.35rem;
+		font-weight: 700;
+	}
+
+	.cal-nav-btn {
+		background-color: #fafafa;
+		color: #1a1a1a;
+		border: 1px solid #d9d9d9;
+		border-radius: 6px;
+		padding: 5px 14px;
+		font-family: inherit;
+		font-size: 0.9rem;
+		cursor: pointer;
+	}
+
+	.cal-nav-btn:hover {
+		background-color: #efefef;
+	}
+
+	.cal-table {
+		width: 100%;
+		flex: 1;
+		min-height: 0;
+		border-collapse: collapse;
+		table-layout: fixed;
+		border: 1px solid #d9d9d9;
+	}
+
+	.cal-table thead {
+		height: 32px;
+	}
+
+	.cal-table tbody {
+		height: calc(100% - 32px);
+	}
+
+	.cal-table tr {
+		height: calc(100% / 6);
+	}
+
+	.cal-table th, .cal-table td {
+		border: 1px solid #d9d9d9;
+		vertical-align: top;
+		padding: 5px 7px;
+	}
+
+	.cal-table th {
+		background-color: #f5f5f5;
+		text-align: center;
+		padding: 6px 4px;
+		font-size: 0.9rem;
+		font-weight: 700;
+	}
+
+	.cal-table th:first-child, .cal-table td:first-child .day-num {
+		color: #e74c3c;
+	}
+
+	.cal-table th:last-child, .cal-table td:last-child .day-num {
+		color: #3498db;
+	}
+
+	.cal-table td {
+		cursor: pointer;
+		background-color: #ffffff;
+		overflow: hidden;
+		transition: background-color 0.2s ease;
+	}
+
+	.cal-table td:hover:not(.empty) {
+		background-color: #f7f7f7;
+	}
+
+	.cal-table td.empty {
+		background-color: #fafafa;
+		cursor: default;
+	}
+
+	.cal-table td.selected {
+		background-color: #eef4ff !important;
+		box-shadow: inset 0 0 0 2px #222222;
+	}
+
+	.day-num {
+		font-size: 0.85rem;
+		font-weight: 700;
+		margin-bottom: 3px;
+		text-align: left;
+		line-height: 1.15;
+	}
+
+	.cal-table td.today .day-num {
+		background-color: #222222;
+		color: #ffffff !important;
+		border-radius: 50%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 21px;
+		height: 21px;
+ 		font-size: 0.78rem;
+	}
+
+	.event-bar {
+		font-size: 0.74rem;
+		line-height: 1.25;
+		background-color: #bdbdbd;
+		color: #1a1a1a;
+		border-radius: 4px;
+		padding: 2px 5px;
+ 		margin-top: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: left;
+	}
+
+	.event-bar.dday-active {
+		background-color: #1a1a1a;
+		color: #ffffff;
+	}
+
+	.schedule-panel {
+		flex: 1;
+		min-width: 320px;
+		min-height: 0;
+		border-left: 1px solid #d9d9d9;
+		padding-left: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.schedule-panel h3 {
+		margin: 0;
+		font-size: 1.15rem;
+		flex-shrink: 0;
+	}
+
+	.schedule-form {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		flex-shrink: 0;
+	}
+
+	.form-row {
+		display: flex;
+		gap: 8px;
+	}
+
+	.schedule-form input[type="text"] {
+		flex: 1;
+		min-width: 0;
+		padding: 9px 12px;
+		background-color: #fafafa;
+		color: #1a1a1a;
+		border: 1px solid #d9d9d9;
+		border-radius: 6px;
+		font-family: inherit;
+		font-size: 0.95rem;
+		outline: none;
+	}
+
+	.schedule-form input[type="text"]::placeholder {
+		color: #888888;
+	}
+
+	.date-range-box {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.9rem;
+		color: #555555;
+	}
+
+	.date-range-box input[type="date"] {
+		padding: 6px 8px;
+		background-color: #fafafa;
+		color: #1a1a1a;
+		border: 1px solid #d9d9d9;
+		border-radius: 6px;
+		font-family: inherit;
+		font-size: 0.88rem;
+	}
+
+	.schedule-form button[type="submit"] {
+		padding: 9px 16px;
+		background-color: #222222;
+		color: #ffffff;
+		border: none;
+		border-radius: 6px;
+ 		font-family: inherit;
+		font-size: 0.95rem;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+
+	.schedule-form button[type="submit"]:hover {
+		opacity: 0.85;
+	}
+
+	.schedule-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.schedule-list li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+		padding: 9px 12px;
+		background-color: #fafafa;
+		border: 1px solid #e5e5e5;
+		border-radius: 6px;
+		font-size: 0.92rem;
+	}
+
+	.btn-dday {
+		background-color: #ffffff;
+		color: #1a1a1a;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+		padding: 4px 8px;
+		font-family: inherit;
+		font-size: 0.82rem;
+		cursor: pointer;
+		margin-right: 6px;
+	}
+
+	.btn-dday.active {
+		background-color: #1a1a1a;
+		color: #ffffff;
+		border-color: #1a1a1a;
+	}
+
+	.btn-del {
+		background: none;
+		border: none;
+		color: #e74c3c;
+		font-family: inherit;
+		font-size: 0.88rem;
+		cursor: pointer;
+	}
+
+	/*다크모드 스타일*/
+	body.dark-mode {
+		background-color: #121212;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode header nav a {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .cal-nav-btn {
+		background-color: #242424;
+		color: #f1f1f1;
+		border-color: #383838;
+	}
+
+	body.dark-mode .cal-nav-btn:hover {
+		background-color: #2f2f2f;
+	}
+
+	body.dark-mode .cal-table, body.dark-mode .cal-table th, body.dark-mode .cal-table td {
+		border-color: #383838;
+	}
+
+	body.dark-mode .cal-table th {
+		background-color: #1e1e1e;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .cal-table td {
+		background-color: #141414;
+	}
+
+	body.dark-mode .cal-table td.empty {
+		background-color: #101010;
+	}
+
+	body.dark-mode .cal-table td:hover:not(.empty) {
+		background-color: #222222;
+	}
+
+	body.dark-mode .cal-table td.selected {
+		background-color: #242424 !important;
+		box-shadow: inset 0 0 0 2px #ffffff;
+	}
+
+	body.dark-mode .cal-table td.today .day-num {
+		background-color: #ffffff;
+		color: #121212 !important;
+	}
+
+	body.dark-mode .event-bar {
+		background-color: #383838;
+		color: #ffffff;
+	}
+
+	body.dark-mode .event-bar.dday-active {
+		background-color: #ffffff;
+		color: #1a1a1a;
+	}
+
+ 	body.dark-mode .schedule-panel {
+		border-left-color: #383838;
+	}
+
+	body.dark-mode .schedule-form input[type="text"], body.dark-mode .date-range-box input[type="date"] {
+		background-color: #242424;
+		color: #ffffff;
+		border-color: #383838;
+	}
+
+	body.dark-mode .schedule-form input[type="text"]::placeholder {
+		color: #777777;
+	}
+
+	body.dark-mode .date-range-box {
+		color: #aaaaaa;
+	}
+
+	body.dark-mode .schedule-form button[type="submit"] {
+		background-color: #ffffff;
+		color: #121212;
+	}
+
+	body.dark-mode .schedule-list li {
+		background-color: #1e1e1e;
+		border-color: #333333;
+	}
+
+	body.dark-mode .btn-dday {
+		background-color: #242424;
+		color: #f1f1f1;
+		border-color: #444444;
+	}
+
+	body.dark-mode .btn-dday.active {
+		background-color: #ffffff;
+		color: #1a1a1a;
+		border-color: #ffffff;
+	}
+</style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">메인</a></li>
+                <li><a href="cal.html">캘린더</a></li>
+                <li><a href="timer.html">타이머</a></li>
+                <li><a href="stats.html">통계</a></li>
+                <li><a href="theme.html">테마</a></li>
+                <li><a href="profile.html">프로필</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calendar-area">
+            <div class="cal-header">
+                <button type="button" class="cal-nav-btn" id="prev-month">&lt; 이전</button>
+                <h2 id="cal-title">2026. 11</h2>
+                <button type="button" class="cal-nav-btn" id="next-month">다음 &gt;</button>
+            </div>
+
+            <table class="cal-table">
+                <thead>
+                    <tr>
+                        <th>일</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                        <th>토</th>
+                    </tr>
+                </thead>
+                <tbody id="cal-body"></tbody>
+            </table>
+        </div>
+
+        <section class="schedule-panel">
+            <h3 id="selected-date-title">날짜를 선택해주세요</h3>
+            <form class="schedule-form" id="schedule-form">
+                <div class="form-row">
+                    <input type="text" id="schedule-input" placeholder="일정 내용을 입력하세요." required>
+                    <button type="submit">추가</button>
+                </div>
+                <div class="date-range-box">
+                    <span>기간:</span>
+                    <input type="date" id="start-date" required>
+                    <span>~</span>
+                    <input type="date" id="end-date" required>
+                </div>
+            </form>
+            <ul class="schedule-list" id="schedule-list"></ul>
+        </section>
+    </main>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    const calTitle = document.getElementById('cal-title');
+    const calBody = document.getElementById('cal-body');
+    const prevMonthBtn = document.getElementById('prev-month');
+    const nextMonthBtn = document.getElementById('next-month');
+    const selectedDateTitle = document.getElementById('selected-date-title');
+    const scheduleForm = document.getElementById('schedule-form');
+    const scheduleInput = document.getElementById('schedule-input');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const scheduleList = document.getElementById('schedule-list');
+
+    const today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth(); 
+    let selectedDateStr = formatDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+    let schedules = JSON.parse(localStorage.getItem('calendarSchedulesV2')) || [];
+    let mainDdays = JSON.parse(localStorage.getItem('customMainDdaysV2')) || [];
+
+    function formatDateKey(year, month, day) {
+        const m = String(month + 1).padStart(2, '0');
+        const d = String(day).padStart(2, '0');
+        return `${year}-${m}-${d}`;
+    }
+
+    function saveSchedules() {
+        localStorage.setItem('calendarSchedulesV2', JSON.stringify(schedules));
+        localStorage.setItem('customMainDdaysV2', JSON.stringify(mainDdays));
+    }
+
+    function renderCalendar() {
+        calTitle.textContent = `${currentYear}. ${String(currentMonth + 1).padStart(2, '0')}`;
+        calBody.innerHTML = '';
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        let dateNum = 1;
+        for (let row = 0; row < 6; row++) {
+            const tr = document.createElement('tr');
+
+            for (let col = 0; col < 7; col++) {
+                const td = document.createElement('td');
+
+                if ((row === 0 && col < firstDay) || dateNum > lastDate) {
+                    td.classList.add('empty');
+                } else {
+                    const thisDateStr = formatDateKey(currentYear, currentMonth, dateNum);
+
+                    if (currentYear === today.getFullYear() && currentMonth === today.getMonth() && dateNum === today.getDate()) {
+                        td.classList.add('today');
+                    }
+                    if (thisDateStr === selectedDateStr) {
+                        td.classList.add('selected');
+                    }
+
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'day-num';
+                    dayDiv.textContent = dateNum;
+                    td.appendChild(dayDiv);
+
+                    schedules.forEach(sch => {
+                        if (thisDateStr >= sch.startDate && thisDateStr <= sch.endDate) {
+                            const badge = document.createElement('div');
+                            badge.className = 'event-bar';
+                            
+                            const isDday = mainDdays.some(d => d.id === sch.id);
+                            if (isDday) {
+                                badge.classList.add('dday-active');
+                                badge.textContent = `${sch.title}`;
+                            } else {
+                                badge.textContent = sch.title;
+                            }
+                            td.appendChild(badge);
+                        }
+                    });
+
+                    td.addEventListener('click', () => {
+                        selectedDateStr = thisDateStr;
+                        startDateInput.value = selectedDateStr;
+                        endDateInput.value = selectedDateStr;
+                        renderCalendar();
+                        renderSchedulePanel();
+                    });
+
+                    dateNum++;
+                }
+                tr.appendChild(td);
+            }
+            calBody.appendChild(tr);
+        }
+    }
+
+    function renderSchedulePanel() {
+        selectedDateTitle.textContent = `📅 ${selectedDateStr} 일정 관리`;
+        
+        if (!startDateInput.value) {
+            startDateInput.value = selectedDateStr;
+            endDateInput.value = selectedDateStr;
+        }
+
+        scheduleList.innerHTML = '';
+
+        const matchedSchedules = schedules.filter(sch => selectedDateStr >= sch.startDate && selectedDateStr <= sch.endDate);
+
+        if (matchedSchedules.length === 0) {
+            scheduleList.innerHTML = '<li style="color: #888; justify-content: center;">등록된 일정이 없습니다.</li>';
+            return;
+        }
+
+        matchedSchedules.forEach(sch => {
+            const li = document.createElement('li');
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = `${sch.title} (${sch.startDate} ~ ${sch.endDate})`;
+
+            const btnGroup = document.createElement('div');
+
+            const ddayBtn = document.createElement('button');
+            ddayBtn.type = 'button';
+            ddayBtn.className = 'btn-dday';
+            const isCurrentDday = mainDdays.some(d => d.id === sch.id);
+
+            if (isCurrentDday) {
+                ddayBtn.classList.add('active');
+                ddayBtn.textContent = '디데이 해제';
+            } else {
+                ddayBtn.textContent = '디데이 설정';
+            }
+
+            ddayBtn.addEventListener('click', () => {
+                if (isCurrentDday) {
+                    mainDdays = mainDdays.filter(d => d.id !== sch.id);
+                } else {
+                    mainDdays.push({ id: sch.id, title: sch.title, date: sch.startDate });
+                }
+                saveSchedules();
+                renderCalendar();
+                renderSchedulePanel();
+            });
+
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn-del';
+            delBtn.textContent = '[삭제]';
+            delBtn.addEventListener('click', () => {
+                schedules = schedules.filter(s => s.id !== sch.id);
+                mainDdays = mainDdays.filter(d => d.id !== sch.id);
+                saveSchedules();
+                renderCalendar();
+                renderSchedulePanel();
+            });
+
+            btnGroup.appendChild(ddayBtn);
+            btnGroup.appendChild(delBtn);
+
+            li.appendChild(textSpan);
+            li.appendChild(btnGroup);
+            scheduleList.appendChild(li);
+        });
+    }
+
+    scheduleForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = scheduleInput.value.trim();
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+
+        if (!title || !startDate || !endDate) return;
+        if (startDate > endDate) {
+            alert('시작일이 종료일보다 늦을 수 없습니다!');
+            return;
+        }
+
+        const newSchedule = {
+            id: Date.now().toString(),
+            title: title,
+            startDate: startDate,
+            endDate: endDate
+        };
+
+        schedules.push(newSchedule);
+        saveSchedules();
+
+        scheduleInput.value = '';
+        renderCalendar();
+        renderSchedulePanel();
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+    });
+
+    startDateInput.value = selectedDateStr;
+    endDateInput.value = selectedDateStr;
+    renderCalendar();
+    renderSchedulePanel();
+</script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Today List</title>
+<style>
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+    		font-weight: 100;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+    		font-weight: 200;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+    		font-weight: 300;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    		font-weight: 400;
+    		font-display: swap;
+	}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+    		font-weight: 500;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+    		font-weight: 600;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    		font-weight: 700;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    		font-weight: 800;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+    		font-weight: 900;
+    		font-display: swap;
+		}
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		min-height: 100vh;
+		background-color: #ffffff;
+		color: #1a1a1a;
+		font-family: 'Paperozi', sans-serif;
+		display: flex;
+		flex-direction: column;
+		transition: background-color 0.25s ease, color 0.25s ease;
+	}
+
+	header {
+		width: 100%;
+		padding: 20px 48px 0;
+	}
+
+	header nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		justify-content: flex-end;
+		gap: 20px;
+	}
+
+	header nav a {
+		color: #1a1a1a;
+		text-decoration: none;
+		font-size: 1.05rem;
+		font-weight: 500;
+	}
+
+	header nav a:hover {
+		opacity: 0.7;
+	}
+
+	main {
+		width: 100%;
+		max-width: 920px;
+		margin: 0 auto;
+		padding: 24px 32px 48px;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.clock-container {
+		text-align: center;
+		margin-bottom: 40px;
+	}
+
+	#date-text {
+		font-size: 0.95rem;
+		color: #666666;
+		margin-bottom: 6px;
+	}
+
+	#clock-text {
+		margin: 0 0 14px;
+		font-size: 3.8rem;
+		font-weight: 700;
+		letter-spacing: 1px;
+		color: #111111;
+	}
+
+	.dday-list-box {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.dday-item,
+	.dday-empty {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 600;
+		color: #222222;
+	}
+
+	.bottom-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+
+	.todo-section {
+		width: 100%;
+	}
+
+	.todo-section h2 {
+		margin: 0 0 14px;
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: #111111;
+	}
+
+	#todo-form {
+		display: flex;
+		width: 100%;
+		margin-bottom: 16px;
+	}
+
+	#todo-input {
+		flex: 1;
+		width: 100%;
+		padding: 10px 12px;
+		background-color: #fafafa;
+		color: #1a1a1a;
+		border: 1px solid #d9d9d9;
+		border-radius: 4px;
+		font-family: inherit;
+		font-size: 0.95rem;
+		outline: none;
+	}
+
+	#todo-input::placeholder {
+		color: #888888;
+	}
+
+	#todo-input:focus {
+		border-color: #999999;
+		background-color: #ffffff;
+	}
+
+	#todo-form button {
+		display: none;
+	}
+
+	#todo-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	#todo-list li {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 10px;
+		font-size: 1rem;
+	}
+
+	#todo-list li input[type="checkbox"] {
+		width: 18px;
+		height: 18px;
+		accent-color: #222222;
+		cursor: pointer;
+	}
+
+	#todo-list li span {
+		color: #1a1a1a;
+	}
+	
+	#todo-list li button {
+		font-family: inherit;
+		font-size: 0.9rem;
+		cursor: pointer;
+		background: none;
+		border: none;
+		color: #e74c3c;
+	}
+
+	input[type="checkbox"]:checked + span {
+		text-decoration: line-through;
+		color: #999999;
+	}
+
+	aside {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	aside h3 {
+		display: none;
+	}
+
+	.progress-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.progress-label {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #1a1a1a;
+	}
+
+	.progress-text {
+		font-size: 1rem;
+		font-weight: 700;
+		color: #222222;
+	}
+
+	.progress-bar-container {
+		--progress: 0%;
+		position: relative;
+		width: 100%;
+		height: 24px;
+		background-color: #f2f2f2;
+		border: 1px solid #dddddd;
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: var(--progress, 0%);
+		background-color: #222222;
+		transition: width 0.25s ease;
+	}
+
+	/*다크모드 스타일*/
+	body.dark-mode {
+		background-color: #121212;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode header nav a {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode #date-text {
+		color: #aaaaaa;
+	}
+
+	body.dark-mode #clock-text,
+	body.dark-mode .todo-section h2 {
+		color: #ffffff;
+	}
+
+	body.dark-mode .dday-item,
+	body.dark-mode .dday-empty {
+		color: #e5e5e5;
+	}
+
+	body.dark-mode #todo-input {
+		background-color: #242424;
+		color: #ffffff;
+		border-color: #383838;
+	}
+
+	body.dark-mode #todo-input::placeholder {
+		color: #777777;
+	}
+
+	body.dark-mode #todo-input:focus {
+		border-color: #666666;
+		background-color: #242424;
+	}
+
+	body.dark-mode #todo-list li span {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode input[type="checkbox"]:checked + span {
+		color: #888888;
+	}
+
+	body.dark-mode .progress-label,
+	body.dark-mode .progress-text {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .progress-bar-container {
+		background-color: #242424;
+		border-color: #383838;
+	}
+
+	body.dark-mode .progress-fill {
+		background-color: #ffffff;
+	}
+</style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">메인</a></li>
+                <li><a href="cal.html">캘린더</a></li>
+                <li><a href="timer.html">타이머</a></li>
+                <li><a href="stats.html">통계</a></li>
+                <li><a href="theme.html">테마</a></li>
+                <li><a href="profile.html">프로필</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 날짜 및 시계 -->
+        <section class="clock-container">
+            <div id="date-text">2026년 11월 18일 (수요일)</div>
+            <h1 id="clock-text">00:00:00</h1>
+            
+            <div class="dday-list-box" id="dday-container">
+                <p class="dday-empty">설정된 디데이가 없습니다</p>
+            </div>
+        </section>
+
+        <div class="bottom-grid">
+            <!-- 체크리스트 -->
+            <section class="todo-section">
+                <h2>할 일 목록 [ To Do List ]</h2>
+                <form id="todo-form">
+                    <input type="text" id="todo-input" placeholder="추가 할 항목을 입력하고 Enter키를 누르세요." required>
+                    <button type="submit">추가</button>
+                </form>
+                <ul id="todo-list"></ul>
+            </section>
+        
+            <!-- 최하단 가로 진행도 -->
+            <aside>
+                <h3>진행도</h3>
+                <div class="progress-header">
+                    <span class="progress-label">진행도</span>
+                    <span class="progress-text">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-fill"></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    function updateClock() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+        const dayOfWeek = weekDays[now.getDay()];
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('date-text').textContent = `${year}년 ${month}월 ${date}일 (${dayOfWeek}요일)`;
+        document.getElementById('clock-text').textContent = `${hours}:${minutes}:${seconds}`;
+        
+        function calculateDday(targetDateStr) {
+            const target = new Date(targetDateStr);
+            const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const diffTime = target - todayDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+            if (diffDays > 0) {
+                return `D-${diffDays}`;
+            } else if (diffDays === 0) {
+                return `D-Day`;
+            } else {
+                return `D+${Math.abs(diffDays)}`;
+            }
+        }
+
+        const mainDdays = JSON.parse(localStorage.getItem('customMainDdaysV2')) || [];
+        const ddayContainer = document.getElementById('dday-container');
+        ddayContainer.innerHTML = '';
+
+        if (mainDdays.length === 0) {
+            ddayContainer.innerHTML = '<p class="dday-empty">설정된 디데이가 없습니다</p>';
+        } else {
+            mainDdays.forEach(d => {
+                const ddayResult = calculateDday(d.date);
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'dday-item';
+                itemDiv.innerHTML = `<span> ${d.title}</span> <span>(${ddayResult})</span>`;
+                ddayContainer.appendChild(itemDiv);
+            });
+        }
+    }
+    
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    const progressText = document.querySelector('.progress-text');
+    const progressBarContainer = document.querySelector('.progress-bar-container');
+
+    function setProgressVisual(percent) {
+        progressText.textContent = `${percent}%`;
+        progressBarContainer.style.setProperty('--progress', `${percent}%`);
+    }
+
+    function saveTodos() {
+        const tasks = [];
+        const liElements = todoList.querySelectorAll('li');
+        
+        liElements.forEach(li => {
+            const checkbox = li.querySelector('input[type="checkbox"]');
+            const span = li.querySelector('span');
+            tasks.push({
+                text: span.textContent,
+                completed: checkbox.checked
+            });
+        });
+
+        localStorage.setItem('todoListItems', JSON.stringify(tasks));
+        
+        const total = tasks.length;
+        const completedCount = tasks.filter(t => t.completed).length;
+        const percent = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+        
+        localStorage.setItem('todayPercent', percent);
+        localStorage.setItem('todoStatsList', JSON.stringify(tasks.map(t => ({
+            text: t.text,
+            completed: t.completed,
+            date: '11/18'
+        }))));
+    }
+
+    function updateProgress() {
+        const checkboxes = todoList.querySelectorAll('input[type="checkbox"]');
+        const total = checkboxes.length;
+
+        if (total === 0) {
+            setProgressVisual(0);
+            saveTodos();
+            return;
+        }
+
+        let completed = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) completed++;
+        });
+
+        const percent = Math.round((completed / total) * 100);
+        setProgressVisual(percent);
+        
+        saveTodos();
+    }
+
+    function renderTask(text, isCompleted) {
+        const li = document.createElement('li');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = isCompleted;
+        checkbox.addEventListener('change', updateProgress);
+
+        const span = document.createElement('span');
+        span.textContent = text;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.textContent = '[ 삭제 ]';
+        deleteBtn.style.fontFamily = 'inherit';
+        deleteBtn.style.cursor = 'pointer';
+        deleteBtn.style.background = 'none';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.color = '#e74c3c';
+        
+        deleteBtn.addEventListener('click', function() {
+            li.remove();
+            updateProgress();
+        });
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(deleteBtn);
+
+        todoList.appendChild(li);
+    }
+
+    function loadTodos() {
+        const savedTasks = JSON.parse(localStorage.getItem('todoListItems')) || [];
+        savedTasks.forEach(task => {
+            renderTask(task.text, task.completed);
+        });
+        updateProgress();
+    }
+
+    todoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const taskText = todoInput.value.trim();
+        if (taskText === '') return;
+
+        renderTask(taskText, false);
+        todoInput.value = '';
+
+        updateProgress();
+    });
+
+    loadTodos();
+</script>
+</body>
+</html>

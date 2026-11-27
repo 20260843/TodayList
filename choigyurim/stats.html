@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Today List - 통계</title>
+<style>
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+    		font-weight: 100;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+    		font-weight: 200;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+    		font-weight: 300;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    		font-weight: 400;
+    		font-display: swap;
+	}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+    		font-weight: 500;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+    		font-weight: 600;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    		font-weight: 700;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    		font-weight: 800;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+    		font-weight: 900;
+    		font-display: swap;
+		}
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		min-height: 100vh;
+		background-color: #ffffff;
+		color: #1a1a1a;
+		font-family: 'Jua', 'Paperozi', sans-serif;
+		display: flex;
+		flex-direction: column;
+		transition: background-color 0.25s ease, color 0.25s ease;
+	}
+
+	header {
+		width: 100%;
+		padding: 22px 56px 0;
+	}
+
+	header nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		justify-content: flex-end;
+		gap: 24px;
+	}
+
+	header nav a {
+		color: #1a1a1a;
+		text-decoration: none;
+		font-size: 1.05rem;
+		font-weight: 500;
+	}
+
+	header nav a:hover {
+		opacity: 0.7;
+	}
+
+	main {
+		width: 100%;
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 28px 40px 56px;
+		flex: 1;
+		display: grid;
+		grid-template-columns: 1.05fr 1fr;
+		gap: 36px;
+		align-items: start;
+	}
+
+	.stat-column {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		min-width: 0;
+	}
+
+	.stat-column h2 {
+		margin: 0;
+		font-size: 1.45rem;
+		font-weight: 700;
+		color: #111111;
+	}
+
+	.stat-card {
+		background-color: #f7f7f7;
+		border: 1px solid #e3e3e3;
+		border-radius: 6px;
+		padding: 26px 28px;
+		min-height: 450px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.chart-board {
+		position: relative;
+		height: 320px;
+		padding: 14px 14px 34px 44px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.grid-line {
+		position: relative;
+		width: 100%;
+		border-top: 1px solid #d4d4d4;
+		height: 0;
+	}
+
+	.grid-line span {
+		position: absolute;
+		left: -40px;
+		top: -9px;
+		font-size: 0.85rem;
+		color: #777777;
+		user-select: none;
+	}
+
+	.chart-container {
+		position: absolute;
+		left: 44px;
+		right: 14px;
+		top: 14px;
+		bottom: 34px;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-around;
+		gap: 10px;
+		border-bottom: 1.5px solid #999999;
+	}
+
+	.chart-bar-wrap {
+		flex: 1;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-end;
+		position: relative;
+	}
+
+	.chart-percent {
+		font-size: 0.82rem;
+		color: #666666;
+		margin-bottom: 4px;
+	}
+
+	.chart-bar {
+		width: 64%;
+		max-width: 42px;
+		min-height: 0;
+		background-color: #222222;
+		border-radius: 3px 3px 0 0;
+		transition: height 0.25s ease;
+	}
+
+	.chart-label {
+		position: absolute;
+		bottom: -28px;
+		font-size: 0.98rem;
+		color: #333333;
+	}
+
+	#weekly-avg {
+		margin: 18px 0 0;
+		font-size: 1.15rem;
+		font-weight: 600;
+		color: #1a1a1a;
+		text-align: left;
+	}
+
+	.completed-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.completed-list li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 14px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid #e6e6e6;
+		font-size: 1.12rem;
+		color: #1a1a1a;
+	}
+
+	.completed-list li:last-child {
+		border-bottom: none;
+	}
+
+	.completed-badge {
+		color: #4a90e2;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	/*다크모드 스타일*/
+	body.dark-mode {
+		background-color: #121212;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode header nav a {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .stat-column h2 {
+		color: #ffffff;
+	}
+
+	body.dark-mode .stat-card {
+		background-color: #202020;
+		border-color: #2e2e2e;
+	}
+
+	body.dark-mode .grid-line {
+		border-top-color: #3a3a3a;
+	}
+
+	body.dark-mode .grid-line span {
+		color: #888888;
+	}
+
+	body.dark-mode .chart-container {
+		border-bottom-color: #666666;
+	}
+
+	body.dark-mode .chart-bar {
+		background-color: #ffffff;
+	}
+
+	body.dark-mode .chart-label,
+	body.dark-mode .chart-percent,
+	body.dark-mode #weekly-avg {
+		color: #e5e5e5;
+	}
+
+	body.dark-mode .completed-list li {
+		border-bottom-color: #303030;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .completed-badge {
+		color: #64b5f6;
+	}
+
+	@media (max-width: 860px) {
+		main {
+			grid-template-columns: 1fr;
+			padding: 20px 24px 40px;
+		}
+
+		.stat-card {
+			min-height: 380px;
+		}
+	}
+</style>
+</head>
+<body>
+<header>
+        <nav>
+            <ul>
+                <li><a href="index.html">메인</a></li>
+                <li><a href="cal.html">캘린더</a></li>
+                <li><a href="timer.html">타이머</a></li>
+                <li><a href="stats.html">통계</a></li>
+                <li><a href="theme.html">테마</a></li>
+                <li><a href="profile.html">프로필</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 왼쪽: 이번 주 할 일 달성률 -->
+        <section class="stat-column">
+            <h2>[ 📊 이번 주 할 일 달성률 ]</h2>
+            <div class="stat-card">
+                <div class="chart-board">
+                    <div class="grid-line"><span>100</span></div>
+                    <div class="grid-line"><span>75</span></div>
+                    <div class="grid-line"><span>50</span></div>
+                    <div class="grid-line"><span>25</span></div>
+                    <div class="grid-line"><span>0</span></div>
+                    <div class="chart-container" id="chart-container"></div>
+                </div>
+                <p id="weekly-avg">- 이번 주 평균 달성률 : 0%</p>
+            </div>
+        </section>
+
+        <!-- 오른쪽: 지난 완료 항목 -->
+        <section class="stat-column">
+            <h2>[ 지난 완료 항목 ]</h2>
+            <div class="stat-card">
+                <ul class="completed-list" id="completed-list"></ul>
+            </div>
+        </section>
+    </main>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    function loadStats() {
+        const savedTodos = JSON.parse(localStorage.getItem('todoStatsList')) || [];
+        const todayPercent = parseInt(localStorage.getItem('todayPercent'), 10) || 0;
+
+        const chartContainer = document.getElementById('chart-container');
+        const weeklyAvgText = document.getElementById('weekly-avg');
+        const completedList = document.getElementById('completed-list');
+
+        const weekDays = ['월', '화', '수', '목', '금', '토', '일'];
+        const now = new Date();
+        let dayIndex = now.getDay() - 1;
+        if (dayIndex === -1) dayIndex = 6;
+
+        chartContainer.innerHTML = '';
+        let totalScore = 0;
+
+        weekDays.forEach((day, index) => {
+            let score = 0;
+            if (index === dayIndex) {
+                score = todayPercent;
+            }
+            totalScore += score;
+
+            const barWrap = document.createElement('div');
+            barWrap.className = 'chart-bar-wrap';
+
+            const percentLabel = document.createElement('span');
+            percentLabel.className = 'chart-percent';
+            percentLabel.textContent = `${score}%`;
+
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.height = `${score}%`;
+
+            const label = document.createElement('span');
+            label.className = 'chart-label';
+            label.textContent = day;
+
+            barWrap.appendChild(percentLabel);
+            barWrap.appendChild(bar);
+            barWrap.appendChild(label);
+            chartContainer.appendChild(barWrap);
+        });
+
+        const avgPercent = Math.round(totalScore / 7);
+        weeklyAvgText.textContent = `- 이번 주 평균 달성률 : ${avgPercent}%`;
+
+        completedList.innerHTML = '';
+        const completedItems = savedTodos.filter(item => item.completed);
+
+        if (completedItems.length === 0) {
+            completedList.innerHTML = '<li style="justify-content: center; color: #888888; border-bottom: none;">완료된 항목이 없습니다.</li>';
+        } else {
+            completedItems.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>- ${item.date || '00/00'} : ${item.text}</span> <span class="completed-badge">[ 완료 ]</span>`;
+                completedList.appendChild(li);
+            });
+        }
+    }
+
+    loadStats();
+</script>
+</body>
+</html>

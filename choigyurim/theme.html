@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Today List - 테마 설정</title>
+<style>
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+    		font-weight: 100;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+    		font-weight: 200;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+    		font-weight: 300;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    		font-weight: 400;
+    		font-display: swap;
+	}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+    		font-weight: 500;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+    		font-weight: 600;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    		font-weight: 700;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    		font-weight: 800;
+    		font-display: swap;
+		}
+
+	@font-face {
+    		font-family: 'Paperozi';
+    		src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+    		font-weight: 900;
+    		font-display: swap;
+		}
+    	* {
+        		box-sizing: border-box;
+    	}
+
+	body {
+		margin: 0;
+		min-height: 100vh;
+		background-color: #ffffff;
+		color: #1a1a1a;
+		font-family: 'Jua', 'Paperozi', sans-serif;
+		display: flex;
+		flex-direction: column;
+		transition: background-color 0.25s ease, color 0.25s ease;
+	}
+
+	header {
+		width: 100%;
+		padding: 22px 56px 0;
+	}
+
+	header nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		justify-content: flex-end;
+		gap: 24px;
+	}
+
+	header nav a {
+		color: #1a1a1a;
+		text-decoration: none;
+		font-size: 1.05rem;
+		font-weight: 500;
+	}
+
+	header nav a:hover {
+		opacity: 0.7;
+	}
+
+	main {
+		width: 100%;
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 24px 32px 64px;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 28px;
+		text-align: center;
+	}
+
+	.theme-selection h2 {
+		margin: 0 0 10px;
+		font-size: 2rem;
+		font-weight: 700;
+		color: #111111;
+	}
+
+	.theme-selection p {
+		margin: 0;
+		font-size: 1rem;
+		color: #666666;
+	}
+
+	.theme-tab-group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 24px;
+		margin-top: 32px;
+		flex-wrap: wrap;
+	}
+
+	.theme-btn {
+		width: 170px;
+		height: 150px;
+		background-color: #f5f5f5;
+		color: #222222;
+		border: 1.5px solid #e0e0e0;
+		border-radius: 18px;
+		font-family: inherit;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+	}
+
+	.theme-btn:hover {
+		background-color: #ececec;
+		transform: translateY(-2px);
+	}
+
+	.theme-btn.active {
+		background-color: #ffffff;
+		border-color: #1a1a1a;
+		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+	}
+
+	.theme-btn .icon {
+		font-size: 2rem;
+		line-height: 1;
+	}
+
+	.theme-btn span:last-child {
+		font-size: 1rem;
+	}
+
+	.theme-status-info p {
+		margin: 0;
+		font-size: 1.05rem;
+		color: #333333;
+	}
+
+	/*다크모드 스타일*/
+	body.dark-mode {
+		background-color: #121212;
+		color: #f1f1f1;
+	}
+
+	body.dark-mode header nav a {
+		color: #f1f1f1;
+	}
+
+	body.dark-mode .theme-selection h2 {
+		color: #ffffff;
+	}
+
+	body.dark-mode .theme-selection p {
+		color: #b0b0b0;
+	}
+
+	body.dark-mode .theme-btn {
+		background-color: #232323;
+		border-color: #2e2e2e;
+		color: #e5e5e5;
+	}
+
+	body.dark-mode .theme-btn:hover {
+		background-color: #2c2c2c;
+	}
+
+	body.dark-mode .theme-btn.active {
+		background-color: #282828;
+		border-color: #888888;
+		color: #ffffff;
+	}
+
+	body.dark-mode .theme-status-info p {
+		color: #e5e5e5;
+	}
+</style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">메인</a></li>
+                <li><a href="cal.html">캘린더</a></li>
+                <li><a href="timer.html">타이머</a></li>
+                <li><a href="stats.html">통계</a></li>
+                <li><a href="theme.html">테마</a></li>
+                <li><a href="profile.html">프로필</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="theme-selection">
+            <h2>테마 설정</h2>
+            <p>원하는 화면 테마를 선택하세요.</p>
+
+            <div class="theme-tab-group">
+                <button type="button" class="theme-btn active" id="btn-light">
+                    <span class="icon" aria-hidden="true">☀️</span>
+                    <span>라이트 모드</span>
+                </button>
+
+                <button type="button" class="theme-btn" id="btn-dark">
+                    <span class="icon" aria-hidden="true">🌙</span>
+                    <span>다크 모드</span>
+                </button>
+            </div>
+        </section>
+
+        <aside class="theme-status-info">
+            <p>적용된 테마 : <strong id="current-theme-text">라이트 모드</strong></p>
+        </aside>
+    </main>
+
+<script>
+    const btnLight = document.getElementById('btn-light');
+    const btnDark = document.getElementById('btn-dark');
+    const currentThemeText = document.getElementById('current-theme-text');
+    const body = document.body;
+
+    function setDarkMode() {
+        body.classList.add('dark-mode');
+        btnDark.classList.add('active');
+        btnLight.classList.remove('active');
+        currentThemeText.textContent = '다크 모드';
+        localStorage.setItem('theme', 'dark');
+    }
+
+    function setLightMode() {
+        body.classList.remove('dark-mode');
+        btnLight.classList.add('active');
+        btnDark.classList.remove('active');
+        currentThemeText.textContent = '라이트 모드';
+        localStorage.setItem('theme', 'light');
+    }
+
+    btnDark.addEventListener('click', setDarkMode);
+    btnLight.addEventListener('click', setLightMode);
+
+    if (localStorage.getItem('theme') === 'dark') {
+        setDarkMode();
+    } else {
+        setLightMode();
+    }
+</script>
+</body>
+</html>
